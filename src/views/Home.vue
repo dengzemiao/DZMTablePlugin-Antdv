@@ -31,6 +31,7 @@
           <br>
           数据源必须进行变化，可以参考 <a @click="jumlCase('case1')">案例一</a>。
         </div>
+        7、如果滚动条样式需要调整，可以参考 <a href="https://blog.csdn.net/zz00008888/article/details/114702186" target="_blank">修改滚动条样式</a>。
       </div>
     </div>
     <!-- 案例五 -->

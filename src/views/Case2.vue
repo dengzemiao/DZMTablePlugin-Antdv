@@ -11,6 +11,7 @@
         :data-source="dataSource"
         :row-key="record => record.id"
         :pagination="pagination"
+        :scroll="{ x: 1500 }"
       >
       </a-table>
     </TablePlugin>

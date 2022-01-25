@@ -6,7 +6,12 @@
     <!-- 浮层视图 -->
     <slot></slot>
     <!-- 滚动条视图 -->
-    <div @scroll="scrollEvent" class="plugin-scroll-bar" ref="plugin-scroll-bar">
+    <div
+      class="plugin-scroll-bar"
+      ref="plugin-scroll-bar"
+      :style="`height: ${scrollBarHeight}px;`"
+      @scroll="scrollEvent"
+    >
       <!-- 滚动条内部撑开元素 -->
       <div class="scroll-bar" ref="scroll-bar"></div>
     </div>
@@ -39,10 +44,20 @@ export default {
     scrollView: {
       default: () => document.documentElement
     },
-    // 底部分页器栏高度
+    // 强制设置为有底部分页器栏（false：自动识别，true：当无法识别时，则根据状态强制设定存在）
+    isExistFooter: {
+      type: Boolean,
+      default: () => false
+    },
+    // 底部分页器栏高度（0 为自动获取，如果获取的尺寸不对，可以手动设置）
     footerHeight: {
       type: Number,
       default: () => 64
+    },
+    // 自定义滚动条父容器高度（一般需要比滚动条高 1-2px 即可，比如后期调整滚动条高度为 4，可将该值调整为 5-6，不修改其实也没影响，如果出现问题在修改也是可以的，这里设置为 18 是为了兼容 window 默认的滚动条高度）
+    scrollBarHeight: {
+      type: Number,
+      default: () => 18
     }
   },
   data () {
@@ -61,16 +76,20 @@ export default {
       tableBody: undefined,
       // 当前 Table 的头部悬浮层 Body 元素
       tableBodyFixed: undefined,
+      // 当前 Table 的底部分页器栏
+      tablePagination: undefined,
       // 当前 Table 自定义滚动条主视图
       tableSrollBarView: undefined,
       // 当前 Table 自定义滚动条子视图
       tableSrollBar: undefined,
+      // 当前 Table 是否支持滚动
+      isTableScroll: false,
       // 鼠标进入了自定义滚动条范围
       isSrollBarHover: false,
       // 当前 Table 左右是否有悬浮列
       isFixedColumn: false,
       // 是否有底部分页器栏
-      isExistFooter: false
+      isExistFooterBar: false
     }
   },
   watch: {
@@ -97,6 +116,10 @@ export default {
     // 滚动对比父元素
     scrollView: {
       handler () { this.reload() }
+    },
+    // 自定义滚动条父容器高度
+    scrollBarHeight: {
+      handler () { this.scrollChange() }
     }
   },
   mounted () {
@@ -123,10 +146,10 @@ export default {
       this.tableFixed = tables[1]
       // 当前 Table 头部 Thead 元素高度，用于悬浮
       this.tableThead = this.table.getElementsByClassName('ant-table-thead')[0]
-      // 当前 Table 是否有左右悬浮列
-      this.isFixedColumn = this.table.getElementsByClassName('ant-table-content')[0].children.length > 1
-      // 有悬浮层
-      if (this.isFixedColumn) {
+      // 当前 Table 是否可以左右滚动
+      this.isTableScroll = this.table.getElementsByClassName('ant-table-scroll').length
+      // 当前 Table 支持左右滚动
+      if (this.isTableScroll) {
         // 当前 Table 的 Body 元素，用于监听 Table 滚动
         var tableScroll = this.table.getElementsByClassName('ant-table-scroll')[0]
         this.tableBody = tableScroll.getElementsByClassName('ant-table-body')[0]
@@ -140,7 +163,10 @@ export default {
         this.tableBodyFixed = this.tableFixed.getElementsByClassName('ant-table-body')[0]
       }
       // 是否启用了分页器
-      this.isExistFooter = this.table.getElementsByClassName('ant-table-pagination').length > 0
+      const paginations = this.table.getElementsByClassName('ant-table-pagination')
+      this.isExistFooterBar = paginations.length > 0
+      if (this.isExistFooterBar) { this.tablePagination = paginations[0] }
+      if (this.isExistFooter) { this.isExistFooterBar = this.isExistFooter }
       // Table 头部进行悬浮
       this.tableFixed.style.position = 'absolute'
       this.tableFixed.style.width = '100%'
@@ -209,8 +235,8 @@ export default {
     reloadScrollBar () {
       // 是否已经加载到页面
       if (this.tableSrollBarView) {
-        // 判断显示与隐藏
-        this.tableSrollBarView.style.opacity = Number(this.isShowScrollBar)
+        // 判断显示与隐藏（支持显示 && 支持滚动）
+        this.tableSrollBarView.style.opacity = Number(this.isShowScrollBar && this.isTableScroll)
       }
     },
     // 刷新悬浮层动画
@@ -243,7 +269,9 @@ export default {
       // 当前距离窗口顶部的高度 + 滚动控件进度条上面以滚动过的高度 = 当前控件距离顶部的滚动距离
       const offsetTop = pluginViewRect.y + topY
       // 分页器栏高度
-      const footerHeight = this.isExistFooter ? this.footerHeight : 0
+      var footerHeight = this.isExistFooterBar ? this.footerHeight : 0
+      // 为 0 则表示自动获取 && 存在分页器栏
+      if (this.footerHeight === 0 && this.tablePagination) { footerHeight = this.tablePagination.clientHeight }
       // 插件视图高度
       const pluginViewHeight = this.pluginView.clientHeight
       // 最大Y值
@@ -256,8 +284,10 @@ export default {
       const srollBarMaxY = footerHeight + (maxY - lastY)
       const srollBarMinY = footerHeight + (maxY - offsetTop - this.tableTheadHeight - srollBarHeight)
       this.tableSrollBarView.style.bottom = `${Math.max(Math.min(srollBarMaxY, srollBarMinY), footerHeight)}px`
-      // 悬浮层尾部位置显示状态
-      if (this.isShowScrollBar) { this.tableSrollBarView.style.opacity = Number(srollBarMaxY > footerHeight) }
+      // 悬浮层尾部位置显示状态（支持显示 && 支持滚动）
+      if (this.isShowScrollBar && this.isTableScroll) {
+        this.tableSrollBarView.style.opacity = Number(srollBarMaxY > footerHeight)
+      }
       // 当前 Table 的 Body 是否支持横向滚动
       // const isTableBodyScroll = this.tableBody.clientWidth < this.tableBody.scrollWidth
     }
@@ -273,7 +303,6 @@ export default {
   position: absolute;
   overflow-x: auto;
   width: 100%;
-  height: 18px;
   z-index: 1;
 }
 .scroll-bar {
