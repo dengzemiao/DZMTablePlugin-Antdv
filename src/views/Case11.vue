@@ -82,7 +82,7 @@ export default {
       this.visible = true
       // 延迟获取
       this.$nextTick(() => {
-        // 获得当前 Drawer
+        // 获得当前 Drawer (通过 ref 获取也是可以的，这里只是举例)
         const drawer = document.getElementsByClassName(this.drawerClass)[0]
         // 获得当前滚动元素，并传入插件进行监听
         this.scrollListener = drawer.getElementsByClassName('ant-drawer-wrapper-body')[0]
