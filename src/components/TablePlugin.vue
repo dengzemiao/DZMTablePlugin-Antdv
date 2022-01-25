@@ -21,6 +21,11 @@
 <script>
 export default {
   props: {
+    // 数据源数量
+    dataCount: {
+      type: Number,
+      default: () => 0
+    },
     // 悬浮层移动动画时间
     durationHeader: {
       type: Number,
@@ -49,7 +54,7 @@ export default {
       type: Boolean,
       default: () => false
     },
-    // 底部分页器栏高度（0 为自动获取，如果获取的尺寸不对，可以手动设置）
+    // 底部分页器栏高度（0 为自动获取，如果获取的尺寸不对，可以手动设置，官方自带底部分页器高度为 64，如果有调整间距则自行设置）
     footerHeight: {
       type: Number,
       default: () => 64
@@ -89,37 +94,43 @@ export default {
       // 当前 Table 左右是否有悬浮列
       isFixedColumn: false,
       // 是否有底部分页器栏
-      isExistFooterBar: false
+      isExistFooterBar: false,
+      // 是否存在数据展示，还是空列表
+      isExistData: false
     }
   },
   watch: {
+    // 数据源数量（主要是这个需要 $nextTick，其他的 $nextTick 可根据情况需求移除直接调用）
+    dataCount: {
+      handler () { this.$nextTick(() => {  this.reload() }) }
+    },
     // 自定义滚动条可视状态
     isShowScrollBar: {
-      handler () { this.reloadScrollBar() }
+      handler () { this.$nextTick(() => {  this.reloadScrollBar() }) }
     },
     // 设置动画时间
     durationHeader: {
-      handler () { this.reloadFixedAnimation() }
+      handler () { this.$nextTick(() => {  this.reloadFixedAnimation() }) }
     },
     // 设置动画时间
     durationFooter: {
-      handler () { this.reloadFixedAnimation() }
+      handler () { this.$nextTick(() => {  this.reloadFixedAnimation() }) }
     },
     // 底部分页器栏高度
     footerHeight: {
-      handler () { this.scrollChange() }
+      handler () { this.$nextTick(() => {  this.scrollChange() }) }
     },
     // 滚动监听对象
     scrollListener: {
-      handler () { this.reload() }
+      handler () { this.$nextTick(() => {  this.reload() }) }
     },
     // 滚动对比父元素
     scrollView: {
-      handler () { this.reload() }
+      handler () { this.$nextTick(() => {  this.reload() }) }
     },
     // 自定义滚动条父容器高度
     scrollBarHeight: {
-      handler () { this.scrollChange() }
+      handler () { this.$nextTick(() => {  this.scrollChange() }) }
     }
   },
   mounted () {
@@ -171,6 +182,8 @@ export default {
       this.tableFixed.style.position = 'absolute'
       this.tableFixed.style.width = '100%'
       this.tableFixed.style.overflow = 'hidden'
+      // 刷新检查 Table 是否存在数据
+      this.reloadDataCheck()
       // 刷新悬浮层内部大小
       this.reloadFixedSize()
       // 刷新动画
@@ -235,8 +248,8 @@ export default {
     reloadScrollBar () {
       // 是否已经加载到页面
       if (this.tableSrollBarView) {
-        // 判断显示与隐藏（支持显示 && 支持滚动）
-        this.tableSrollBarView.style.opacity = Number(this.isShowScrollBar && this.isTableScroll)
+        // 判断显示与隐藏（支持显示 && 支持滚动 && Table有展示数据）
+        this.tableSrollBarView.style.opacity = Number(this.isShowScrollBar && this.isTableScroll && this.isExistData)
       }
     },
     // 刷新悬浮层动画
@@ -254,9 +267,23 @@ export default {
       // 将当前自定义滚动条宽度与当前 Table 的 Body 元素保持一致
       this.tableSrollBar.style.width = `${this.tableBody.scrollWidth}px`
     },
+    // 刷新检查 Table 中是否存在数据
+    reloadDataCheck () {
+      // 数据量数量
+      if (this.dataCount > 0) {
+        // 有数据
+        this.isExistData = true
+      } else {
+        // 自行获取判断
+        this.isExistData = this.tableBody.getElementsByClassName('ant-table-tbody')[0].children.length
+      }
+      // 隐藏或显示
+      this.tableFixed.style.opacity = Number(this.isExistData)
+      this.tableSrollBarView.style.opacity = Number(this.isExistData)
+    },
     // 滚动变化处理
     scrollChange () {
-      // 是否有滚动对比元素
+      // 没有有滚动对比元素
       if (!this.scrollView) { return }
       // 刷新悬浮层内部大小
       this.reloadFixedSize()
@@ -284,8 +311,8 @@ export default {
       const srollBarMaxY = footerHeight + (maxY - lastY)
       const srollBarMinY = footerHeight + (maxY - offsetTop - this.tableTheadHeight - srollBarHeight)
       this.tableSrollBarView.style.bottom = `${Math.max(Math.min(srollBarMaxY, srollBarMinY), footerHeight)}px`
-      // 悬浮层尾部位置显示状态（支持显示 && 支持滚动）
-      if (this.isShowScrollBar && this.isTableScroll) {
+      // 悬浮层尾部位置显示状态（支持显示 && 支持滚动 && Table有展示数据）
+      if (this.isShowScrollBar && this.isTableScroll && this.isExistData) {
         this.tableSrollBarView.style.opacity = Number(srollBarMaxY > footerHeight)
       }
       // 当前 Table 的 Body 是否支持横向滚动

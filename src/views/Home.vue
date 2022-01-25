@@ -11,6 +11,14 @@
       <div style="margin-top: 20px; line-height: 28px;">
         测试结果建议：
         <br>
+        0、重点注意：如果是网络数据，加载数据完成后，刷新插件布局（二选一）：
+        <div style="margin-left: 20px;">
+          方式一：将当前数据源数量传递到插件内部 :dataCount="dataSource.length"
+          <br>
+          方式二：<a>this.$nextTick(() => {  this.$refs['TablePlugin'].reload() })</a>
+          <br>
+          保证悬浮位置的准确性。
+        </div>
         1、左右两侧没有悬浮固定列的，上下滚动会有卡顿。
         <br>
         2、有固定列的，滚动比较流畅。
