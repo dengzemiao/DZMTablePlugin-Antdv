@@ -21,7 +21,7 @@
           :data-source="dataSource"
           :row-key="record => record.id"
           :pagination="pagination"
-          :scroll="{ x: 1500 }"
+          :scroll="{ x: true }"
         >
         </a-table>
       </TablePlugin>
@@ -37,8 +37,7 @@ const columns = [
   {
     title: 'id',
     dataIndex: 'id',
-    key: 'id',
-    fixed: 'left'
+    key: 'id'
   },
   {
     title: '姓名(测试长名字！测试长名字！测试长名字！测试长名字！测试长名字！)',

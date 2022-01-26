@@ -2,16 +2,17 @@
   <!-- 内容视图 -->
   <div class="content-view">
     <!-- TablePlugin -->
-    <TablePlugin
+    <!-- <TablePlugin
       :durationHeader="0.2"
       :durationFooter="0.1"
-    >
+    > -->
+    <TablePlugin>
       <a-table
         :columns="columns"
         :data-source="dataSource"
         :row-key="record => record.id"
         :pagination="pagination"
-        :scroll="{ x: 1500 }"
+        :scroll="{ x: true }"
       >
       </a-table>
     </TablePlugin>

@@ -90,7 +90,7 @@ export default {
         this.scrollListener = drawer.getElementsByClassName('ant-drawer-wrapper-body')[0]
 
         // // Ref 方式获得当前 Drawer
-        // const drawer = this.$refs['PluginDrawer']
+        // const drawer = this.$refs['PluginDrawer'].$el
         // // 获得当前滚动元素，并传入插件进行监听
         // this.scrollListener = drawer.getElementsByClassName('ant-drawer-wrapper-body')[0]
       })

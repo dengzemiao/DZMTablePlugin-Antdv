@@ -212,7 +212,8 @@ export default {
       this.tableSrollBarView.addEventListener('scroll', this.unifiedScrollLeft)
       // 监听滚动
       if (this.scrollListener) { this.scrollListener.addEventListener('scroll', this.scrollChange) }
-      // 监听窗口缩放（ window.onresize = () => { this.scrollChange() } ）
+      // 监听窗口缩放
+      // window.onresize = () => { this.scrollChange() }
       window.addEventListener('resize', this.scrollChange)
     },
     // 移除监听事件
@@ -226,6 +227,7 @@ export default {
       // 移除监听滚动
       if (this.scrollListener) { this.scrollListener.removeEventListener('scroll', this.scrollChange) }
       // 移除监听窗口缩放
+      // window.onresize = null
       window.removeEventListener('resize', this.scrollChange)
     },
     // 统一滚动坐标
