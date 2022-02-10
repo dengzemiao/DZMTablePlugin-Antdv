@@ -146,17 +146,15 @@ export default {
     initPlugin () {
       // 当前插件视图
       this.pluginView = this.$refs['plugin-view']
-      // 获取当前插件所包裹的组件
-      const childrens = this.pluginView.children
       // 当前自定义滚动条
       this.tableSrollBarView = this.$refs['plugin-scroll-bar']
       this.tableSrollBar = this.$refs['scroll-bar']
       // 当前插件内所有 Table 元素
       const tables = this.pluginView.getElementsByClassName('ant-table-wrapper')
       // 当前 Table
-      this.table = childrens[0]
+      this.table = tables[0]
       // 当前 Table 悬浮层
-      this.tableFixed = childrens[1]
+      this.tableFixed = tables[1]
       // 当前 Table 头部 Thead 元素高度，用于悬浮
       this.tableThead = this.table.getElementsByClassName('ant-table-thead')[0]
       // 当前 Table 是否可以左右滚动
@@ -253,7 +251,9 @@ export default {
       // 是否已经加载到页面
       if (this.tableSrollBarView) {
         // 判断显示与隐藏（支持显示 && 支持滚动 && Table有展示数据）
-        this.tableSrollBarView.style.opacity = Number(this.isShowScrollBar && this.isTableScroll && this.isExistData)
+        this.tableSrollBarView.style.display = Number(this.isShowScrollBar && this.isTableScroll && this.isExistData) ? 'block' : 'none'
+        // 同步滚动进度
+        if (this.tableBody) { this.tableSrollBarView.scrollLeft = this.tableBody.scrollLeft }
       }
     },
     // 刷新悬浮层动画
@@ -283,7 +283,7 @@ export default {
       }
       // 隐藏或显示
       this.tableFixed.style.opacity = Number(this.isExistData)
-      this.tableSrollBarView.style.opacity = Number(this.isExistData)
+      this.tableSrollBarView.style.display = Number(this.isExistData) ? 'block' : 'none'
     },
     // 滚动变化处理
     scrollChange () {
@@ -317,7 +317,8 @@ export default {
       this.tableSrollBarView.style.bottom = `${Math.max(Math.min(srollBarMaxY, srollBarMinY), footerHeight)}px`
       // 悬浮层尾部位置显示状态（支持显示 && 支持滚动 && Table有展示数据）
       if (this.isShowScrollBar && this.isTableScroll && this.isExistData) {
-        this.tableSrollBarView.style.opacity = Number(srollBarMaxY > footerHeight)
+        this.tableSrollBarView.scrollLeft = this.tableBody.scrollLeft
+        this.tableSrollBarView.style.display = Number(srollBarMaxY > footerHeight) ? 'block' : 'none'
       }
       // 当前 Table 的 Body 是否支持横向滚动
       // const isTableBodyScroll = this.tableBody.clientWidth < this.tableBody.scrollWidth
