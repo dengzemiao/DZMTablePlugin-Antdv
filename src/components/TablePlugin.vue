@@ -146,15 +146,17 @@ export default {
     initPlugin () {
       // 当前插件视图
       this.pluginView = this.$refs['plugin-view']
+      // 获取当前插件所包裹的组件
+      const childrens = this.pluginView.children
       // 当前自定义滚动条
       this.tableSrollBarView = this.$refs['plugin-scroll-bar']
       this.tableSrollBar = this.$refs['scroll-bar']
       // 当前插件内所有 Table 元素
       const tables = this.pluginView.getElementsByClassName('ant-table-wrapper')
       // 当前 Table
-      this.table = tables[0]
+      this.table = childrens[0]
       // 当前 Table 悬浮层
-      this.tableFixed = tables[1]
+      this.tableFixed = childrens[1]
       // 当前 Table 头部 Thead 元素高度，用于悬浮
       this.tableThead = this.table.getElementsByClassName('ant-table-thead')[0]
       // 当前 Table 是否可以左右滚动

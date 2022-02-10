@@ -6,6 +6,7 @@ import Case2 from '../views/Case2.vue'
 import Case3 from '../views/Case3.vue'
 import Case4 from '../views/Case4.vue'
 import Case5 from '../views/Case5.vue'
+import Case6 from '../views/Case6.vue'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,10 @@ const routes = [
   {
     path: '/case5',
     component: Case5
+  },
+  {
+    path: '/case6',
+    component: Case6
   }
 ]
 
