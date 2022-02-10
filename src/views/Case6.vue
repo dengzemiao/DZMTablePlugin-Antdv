@@ -1,22 +1,26 @@
 <template>
-  <!-- TablePlugin -->
-  <TablePlugin>
-    <!-- <div class="content-view">
-      <div class="content-view-two"> -->
+  <!-- 内容视图 -->
+  <div class="content-view">
+    <div class="content-view-two">
+      <!-- TablePlugin -->
+      <TablePlugin>
+        <!-- 注意：插件包裹的 div 不能存在 padding margin 元素 -->
         <div>
-          <a-table
-            class="my-table"
-            :columns="columns"
-            :data-source="dataSource"
-            :row-key="record => record.id"
-            :pagination="pagination"
-            :scroll="{ x: 1500 }"
-          >
-          </a-table>
+          <div>
+            <a-table
+              class="my-table"
+              :columns="columns"
+              :data-source="dataSource"
+              :row-key="record => record.id"
+              :pagination="pagination"
+              :scroll="{ x: 1500 }"
+            >
+            </a-table>
+          </div>
         </div>
-      <!-- </div>
-    </div> -->
-  </TablePlugin>
+      </TablePlugin>
+    </div>
+  </div>
 </template>
 
 <script>

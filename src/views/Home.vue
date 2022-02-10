@@ -6,7 +6,7 @@
       <a-button @click="jumlCase('case3')">案例三：Table 在多层级视图中效果</a-button>
       <a-button @click="jumlCase('case4')">案例四：Table 同一个页面存在多个效果</a-button>
       <a-button @click="jumlCase('case5')">案例五：Table 自定义滚动监听</a-button>
-      <a-button @click="jumlCase('case5')">案例六：Table Plugin 包裹被多层 div 包裹的 Table</a-button>
+      <a-button @click="jumlCase('case6')">案例六：Table Plugin 包裹被多层 div 包裹的 Table</a-button>
       <a-button @click="touchCase11">案例七：Table 在侧滑弹窗中效果</a-button>
       <!-- 小提示 -->
       <div class="hint-view">
