@@ -251,7 +251,9 @@ export default {
       // 是否已经加载到页面
       if (this.tableSrollBarView) {
         // 判断显示与隐藏（支持显示 && 支持滚动 && Table有展示数据）
-        this.tableSrollBarView.style.opacity = Number(this.isShowScrollBar && this.isTableScroll && this.isExistData)
+        this.tableSrollBarView.style.display = Number(this.isShowScrollBar && this.isTableScroll && this.isExistData) ? 'block' : 'none'
+        // 同步滚动进度
+        if (this.tableBody) { this.tableSrollBarView.scrollLeft = this.tableBody.scrollLeft }
       }
     },
     // 刷新悬浮层动画
@@ -281,7 +283,7 @@ export default {
       }
       // 隐藏或显示
       this.tableFixed.style.opacity = Number(this.isExistData)
-      this.tableSrollBarView.style.opacity = Number(this.isExistData)
+      this.tableSrollBarView.style.display = Number(this.isExistData) ? 'block' : 'none'
     },
     // 滚动变化处理
     scrollChange () {
@@ -315,7 +317,8 @@ export default {
       this.tableSrollBarView.style.bottom = `${Math.max(Math.min(srollBarMaxY, srollBarMinY), footerHeight)}px`
       // 悬浮层尾部位置显示状态（支持显示 && 支持滚动 && Table有展示数据）
       if (this.isShowScrollBar && this.isTableScroll && this.isExistData) {
-        this.tableSrollBarView.style.opacity = Number(srollBarMaxY > footerHeight)
+        this.tableSrollBarView.scrollLeft = this.tableBody.scrollLeft
+        this.tableSrollBarView.style.display = Number(srollBarMaxY > footerHeight) ? 'block' : 'none'
       }
       // 当前 Table 的 Body 是否支持横向滚动
       // const isTableBodyScroll = this.tableBody.clientWidth < this.tableBody.scrollWidth
