@@ -12,6 +12,16 @@
       <div class="hint-view">
         <span class="hint-title">测试结果建议（一般情况下不需要用到，遇到时可以进行参考）：</span>
         <br>
+        0、使用案例：
+        <div class="hint-content">
+          <div>dataCount：数据数量变化会更新插件布局。</div>
+          <div>scrollListener：默认一般不需要修改，只有在页面无法滚动，子视图进行滚动时，需要切换滚动监听对象</div>
+          <textarea cols="70" rows="3">
+            <TablePlugin :dataCount="dataSource.length" :scrollListener="scrollListener">
+              <a-table :columns="columns" :data-source="dataSource"></a-table>
+            </TablePlugin>
+          </textarea>
+        </div>
         <div class="hint-space"></div>
         1、重点注意：如果是网络数据，加载数据完成后，刷新插件布局（二选一）：
         <div class="hint-content">
