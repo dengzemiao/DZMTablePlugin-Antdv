@@ -2,10 +2,9 @@
   <div class="content-view">
     <div class="case-list">
       <a-button @click="jumlCase('case1')">案例一：Table 左右有固定悬浮列效果（包含排序，勾选）</a-button>
-      <a-button @click="jumlCase('case2')">案例二：Table 无固定悬浮列效果（带动画）</a-button>
+      <a-button @click="jumlCase('case2')">案例二：Table 无固定悬浮列效果</a-button>
       <a-button @click="jumlCase('case3')">案例三：Table 在多层级视图中效果</a-button>
       <a-button @click="jumlCase('case4')">案例四：Table 同一个页面存在多个效果</a-button>
-      <a-button @click="jumlCase('case5')">案例五：Table 自定义滚动监听</a-button>
       <a-button @click="jumlCase('case6')">案例六：Table Plugin 包裹被多层 div 包裹的 Table</a-button>
       <a-button @click="touchCase11">案例七：Table 在侧滑弹窗中效果</a-button>
       <!-- 小提示 -->
@@ -13,20 +12,11 @@
         <span class="hint-title">测试结果建议（一般情况下不需要用到，遇到时可以进行参考）：</span>
         <br>
         <div class="hint-space"></div>
-        1、重点注意：如果是网络数据，加载数据完成后，刷新插件布局（二选一）：
-        <div class="hint-content">
-          方式一：将当前数据源数量传递到插件内部 <a>:dataCount="dataSource.length"</a>
-          <br>
-          方式二：<a>this.$nextTick(() => {  this.$refs['TablePlugin'].reload() })</a>
-          <br>
-          保证悬浮位置的准确性，有数据就出来悬浮层，没有数据则会隐藏悬浮层。
-        </div>
+        1、需要安装 <a>npm install element-resize-detector</a>，用于判断是否存在数据。
         <div class="hint-space"></div>
         2、有左右滚动范围，列宽度可以进行滚动的时候，悬浮层会比较流畅，
         <div class="hint-content">
-          无左右滚动范围时，上线滚动悬浮层在有的情况会出现闪动的情况。
-          <br>
-          在无需左右滚动范围时，可以通过给 Table 设置 <a>:scroll="{ x: true }"</a> 强行带滚动，并隐藏滚动条
+          无左右滚动范围时，会无法进行悬浮，可以通过给 Table 设置 <a>:scroll="{ x: true }"</a> 强行带滚动，并隐藏滚动条
           <br>
           这种出来方式是为了在一个不需要左右滚动的 Table 身上带上滚动元素，
           <br>
@@ -41,7 +31,7 @@
         <div class="hint-space"></div>
         5、如果悬浮的自定义滚动条无法拖拽，是因为滚动条高度低了，
         <div class="hint-content">
-          增高 TablePlugin 底部的 <a>.plugin-scroll-bar</a> 高度即可。
+          增高 TablePlugin 底部的 <a>.progress-view</a> 高度即可。
         </div>
         <div class="hint-space"></div>
         6、排序、勾选等操作，都需要公共处理数据源，

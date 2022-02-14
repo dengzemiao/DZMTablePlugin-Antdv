@@ -2,10 +2,6 @@
   <!-- 内容视图 -->
   <div class="content-view">
     <!-- TablePlugin -->
-    <!-- <TablePlugin
-      :durationHeader="0.2"
-      :durationFooter="0.1"
-    > -->
     <TablePlugin>
       <a-table
         :columns="columns"
