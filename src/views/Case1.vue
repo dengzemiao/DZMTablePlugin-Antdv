@@ -58,7 +58,7 @@ export default {
       dataSource,
       pagination: {
         current: 1,
-        pageSize: 20,
+        pageSize: 50,
         total: dataSource.length
       },
       // 勾选框这种方式就是修改数据源，所以不需要做任何处理，排序操作跟这个原理一致
