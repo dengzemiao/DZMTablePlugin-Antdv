@@ -21,7 +21,7 @@
 <script>
 export default {
   props: {
-    // 数据源数量
+    // 数据源数量（用于代替 element-resize-detector 监听的解决方案）
     dataCount: {
       type: Number,
       default: () => 0
