@@ -11,6 +11,14 @@
       <div class="hint-view">
         <span class="hint-title">测试结果建议（一般情况下不需要用到，遇到时可以进行参考）：</span>
         <br>
+        0、使用案例：
+        <div class="hint-content">
+          <textarea cols="70" rows="1">
+            <TablePlugin>
+              <a-table></a-table>
+            </TablePlugin>
+          </textarea>
+        </div>
         <div class="hint-space"></div>
         1、需要安装 <a>npm install element-resize-detector</a>，用于判断是否存在数据。
         <div class="hint-space"></div>
