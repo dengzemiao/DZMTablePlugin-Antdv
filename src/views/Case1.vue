@@ -2,7 +2,7 @@
   <!-- 内容视图 -->
   <div class="content-view">
     <!-- TablePlugin -->
-    <TablePlugin>
+    <TablePlugin @scroll="scrollChange">
       <a-table
         :columns="columns"
         :data-source="dataSource"
@@ -78,6 +78,10 @@ export default {
     // 勾选测试
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
+    },
+    // 触发了滚动
+    scrollChange (isVer) {
+      console.log(`正在 ${isVer ? '竖向' : '横向'} 滚动`)
     }
   }
 }

@@ -235,6 +235,8 @@ export default {
       this.tableSrollBarView.scrollLeft = e.target.scrollLeft
       this.tableBody.scrollLeft = e.target.scrollLeft
       this.tableBodyFixed.scrollLeft = e.target.scrollLeft
+      // 滚动回调
+      this.$emit('scroll', false)
     },
     // 自定义滚动条滚动中
     scrollEvent (e) {
@@ -289,6 +291,8 @@ export default {
     scrollChange () {
       // 没有有滚动对比元素
       if (!this.scrollView) { return }
+      // 滚动回调
+      this.$emit('scroll', true)
       // 刷新悬浮层内部大小
       this.reloadFixedSize()
       // 获得当前 Table 插件在窗口上的具体位置

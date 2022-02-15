@@ -1,7 +1,7 @@
 <template>
   <div class="content-view">
     <div class="case-list">
-      <a-button @click="jumlCase('case1')">案例一：Table 左右有固定悬浮列效果（包含排序，勾选）</a-button>
+      <a-button @click="jumlCase('case1')">案例一：Table 左右有固定悬浮列效果（包含排序，勾选，滚动方向）</a-button>
       <a-button @click="jumlCase('case2')">案例二：Table 无固定悬浮列效果（带动画）</a-button>
       <a-button @click="jumlCase('case3')">案例三：Table 在多层级视图中效果</a-button>
       <a-button @click="jumlCase('case4')">案例四：Table 同一个页面存在多个效果</a-button>
