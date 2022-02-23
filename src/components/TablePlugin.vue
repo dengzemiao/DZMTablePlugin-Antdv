@@ -31,6 +31,11 @@ export default {
       type: Number,
       default: () => 0
     },
+    // 悬浮层头部距离顶部距离（用于顶部有悬浮菜单栏时，悬浮头不被挡住，保持在悬浮菜单栏之下）
+    fixedHeaderTop: {
+      type: Number,
+      default: () => 0
+    },
     // 悬浮层移动动画时间
     durationHeader: {
       type: Number,
@@ -349,7 +354,7 @@ export default {
       // 最大Y值
       const maxY = offsetTop + pluginViewHeight - footerHeight
       // 更新悬浮层头部位置
-      this.tableFixed.style.top = `${Math.max(Math.min(-pluginViewRect.y, (maxY - offsetTop - this.tableTheadHeight)), 0)}px`
+      this.tableFixed.style.top = `${Math.max(Math.min(-pluginViewRect.y + this.fixedHeaderTop, (maxY - offsetTop - this.tableTheadHeight)), 0)}px`
       // 自定义滚动条高度
       const srollBarHeight = this.tableSrollBarView.offsetHeight
       // 更新悬浮层尾部位置
