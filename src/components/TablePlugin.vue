@@ -26,6 +26,11 @@ export default {
       type: Number,
       default: () => 0
     },
+    // 从第一行开始，指定前面几行跟头部进行悬浮（0：不开启，>=1：代表前面几行都会跟头部进行悬浮）
+    fixedRowCount: {
+      type: Number,
+      default: () => 0
+    },
     // 悬浮层移动动画时间
     durationHeader: {
       type: Number,
@@ -96,13 +101,19 @@ export default {
       // 是否有底部分页器栏
       isExistFooterBar: false,
       // 是否存在数据展示，还是空列表
-      isExistData: false
+      isExistData: false,
+      // 悬浮行列表
+      fixedRows: []
     }
   },
   watch: {
     // 数据源数量（主要是这个需要 $nextTick，其他的 $nextTick 可根据情况需求移除直接调用）
     dataCount: {
       handler () { this.$nextTick(() => {  this.reload() }) }
+    },
+    // 从第一行开始，指定前面几行跟头部进行悬浮
+    fixedRowCount: {
+      handler () { this.$nextTick(() => {  this.reloadFixedRows() }) }
     },
     // 自定义滚动条可视状态
     isShowScrollBar: {
@@ -184,6 +195,8 @@ export default {
       this.tableFixed.style.overflow = 'hidden'
       // 刷新检查 Table 是否存在数据
       this.reloadDataCheck()
+      // 刷新悬浮行数
+      this.reloadFixedRows()
       // 刷新悬浮层内部大小
       this.reloadFixedSize()
       // 刷新动画
@@ -268,10 +281,34 @@ export default {
     reloadFixedSize () {
       // 获得头部高度
       this.tableTheadHeight = this.tableThead.clientHeight
+      // 是否存在悬浮行
+      this.fixedRows.forEach(item => {
+        this.tableTheadHeight += item.clientHeight
+      })
       // 头部悬浮层高度统一
       this.tableFixed.style.height = `${this.tableTheadHeight}px`
       // 将当前自定义滚动条宽度与当前 Table 的 Body 元素保持一致
       this.tableSrollBar.style.width = `${this.tableBody.scrollWidth}px`
+    },
+    // 刷新悬浮层高度
+    reloadFixedRows () {
+      // 判断是否需要固定行
+      if (this.fixedRowCount > 0) {
+        // 获取行列表
+        const rows = Array.from(this.tableBody.getElementsByClassName('ant-table-tbody')[0].children)
+        // 取出悬浮列
+        const fixedRows = []
+        rows.every((item, index) => {
+          const isOK = index < this.fixedRowCount
+          if (isOK) { fixedRows.push(item) }
+          return isOK
+        })
+        // 记录
+        this.fixedRows = fixedRows
+      } else {
+        // 清空
+        this.fixedRows = []
+      }
     },
     // 刷新检查 Table 中是否存在数据
     reloadDataCheck () {
