@@ -36,6 +36,11 @@ export default {
       type: Number,
       default: () => 0
     },
+    // 悬浮头底部需要额外增高多少px（比如分割线未显示全，可能是高度不够，稍微添加几px才能看见）
+    fixedHeaderOffsetBottom: {
+      type: Number,
+      default: () => 0
+    },
     // 悬浮层移动动画时间
     durationHeader: {
       type: Number,
@@ -290,6 +295,8 @@ export default {
       this.fixedRows.forEach(item => {
         this.tableTheadHeight += item.clientHeight
       })
+      // 增加偏移高度
+      this.tableTheadHeight += this.fixedHeaderOffsetBottom
       // 头部悬浮层高度统一
       this.tableFixed.style.height = `${this.tableTheadHeight}px`
       // 将当前自定义滚动条宽度与当前 Table 的 Body 元素保持一致
