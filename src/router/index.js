@@ -9,6 +9,7 @@ import Case5 from '../views/Case5.vue'
 import Case6 from '../views/Case6.vue'
 import Case7 from '../views/Case7.vue'
 import Case8 from '../views/Case8.vue'
+import Case9 from '../views/Case9.vue'
 
 Vue.use(VueRouter)
 
@@ -48,6 +49,10 @@ const routes = [
   {
     path: '/Case8',
     component: Case8
+  },
+  {
+    path: '/Case9',
+    component: Case9
   }
 ]
 

@@ -32,12 +32,17 @@ export default {
       default: () => 0
     },
     // 悬浮层头部距离顶部距离（用于顶部有悬浮菜单栏时，悬浮头不被挡住，保持在悬浮菜单栏之下）
-    fixedHeaderTop: {
+    fixedHeadTop: {
       type: Number,
       default: () => 0
     },
-    // 悬浮头底部需要额外增高多少px（比如分割线未显示全，可能是高度不够，稍微添加几px才能看见）
-    fixedHeaderOffsetBottom: {
+    // 悬浮层内部 Table 悬浮头到悬浮层顶部的距离，0 为自动获取（也就是 Table 顶上如果加了自定义元素，Table 到插件顶上的距离）
+    fixedHeadPaddingTop: {
+      type: Number,
+      default: () => 0
+    },
+    // 悬浮头需要额外增高多少px（比如分割线未显示全，可能是高度不够，稍微添加几px才能看见）
+    fixedHeaderOffsetHeight: {
       type: Number,
       default: () => 0
     },
@@ -88,6 +93,8 @@ export default {
       table: undefined,
       // 当前 Table 的头部悬浮层
       tableFixed: undefined,
+      // 当前悬浮层中的 Table 元素
+      tableFixedWrapper: undefined,
       // 当前 Table 头部 Thead 元素
       tableThead: undefined,
       // 当前 Table 头部 Thead 元素高度
@@ -113,13 +120,19 @@ export default {
       // 是否存在数据展示，还是空列表
       isExistData: false,
       // 悬浮行列表
-      fixedRows: []
+      fixedRows: [],
+      // 悬浮层在插件内部 Table 头到插件顶部之间的间距，也算是插件的 paddingTop，一般在 Table 上面有自定义元素时才会生效
+      fixedHeaderPaddingTop: 0
     }
   },
   watch: {
     // 数据源数量（主要是这个需要 $nextTick，其他的 $nextTick 可根据情况需求移除直接调用）
     dataCount: {
       handler () { this.$nextTick(() => {  this.reload() }) }
+    },
+    // 悬浮层内部 Table 悬浮头到悬浮层顶部的距离，0 为自动获取
+    fixedHeadPaddingTop: {
+      handler () { this.$nextTick(() => {  this.reloadFixedHeadPaddingTop() }) }
     },
     // 从第一行开始，指定前面几行跟头部进行悬浮
     fixedRowCount: {
@@ -172,20 +185,34 @@ export default {
       this.tableSrollBar = this.$refs['scroll-bar']
       // 获取当前插件内的所有子元素
       const childrens = Array.from(this.pluginView.children)
-      console.log(childrens);
       // 获得包含 Table 的子元素
       const tables = []
+      // 当前 Table 元素 ClassName
+      const className = 'ant-table-wrapper'
+      // 便利当前子元素列表
       childrens.forEach((children) => {
-        const els = Array.from(children.getElementsByClassName('ant-table-wrapper'))
-        if (els.length) { tables.push(children) }
+        // 当前元素是否就是 Table 元素
+        if (children.className.includes(className)) {
+          // 当前就是 Table 元素
+          tables.push(children)
+        } else {
+          // 当前不是 Table 元素，需要查找是否包含 Table 元素
+          const els = Array.from(children.getElementsByClassName(className))
+          if (els.length) { tables.push(children) }
+        }
       })
-      // console.log(childrens);
-      // 当前插件内所有 Table 元素
-      // const tables = this.pluginView.getElementsByClassName('ant-table-wrapper')
       // 当前 Table
       this.table = tables[0]
       // 当前 Table 悬浮层
       this.tableFixed = tables[1]
+      // 当前悬浮层中的 Table 元素
+      if (this.tableFixed.className.includes(className)) {
+        // 记录
+        this.tableFixedWrapper = this.tableFixed
+      } else {
+        // 记录
+        this.tableFixedWrapper = this.tableFixed.getElementsByClassName(className)[0]
+      }
       // 当前 Table 头部 Thead 元素高度，用于悬浮
       this.tableThead = this.table.getElementsByClassName('ant-table-thead')[0]
       // 当前 Table 是否可以左右滚动
@@ -217,8 +244,8 @@ export default {
       this.reloadDataCheck()
       // 刷新悬浮行数
       this.reloadFixedRows()
-      // 刷新悬浮层内部大小
-      this.reloadFixedSize()
+      // 获取悬浮层 Table 头到插件顶部的距离，保证悬浮层高度（该方法内部包含 this.reloadFixedSize()）
+      this.reloadFixedHeadPaddingTop()
       // 刷新动画
       this.reloadFixedAnimation()
       // 刷新滚动条的可视状态
@@ -297,16 +324,33 @@ export default {
       this.tableFixed.style.transition = `all ${this.durationHeader}s`
       this.tableSrollBarView.style.transition = `all ${this.durationFooter}s`
     },
+    // 获取悬浮层在插件内部 Table 头到插件顶部之间的间距，也算是插件的 paddingTop
+    reloadFixedHeadPaddingTop () {
+      // 是否有自定义高度
+      if (this.fixedHeadPaddingTop === 0) {
+        // 获取悬浮层距离顶部距离
+        const tableFixedRect = this.tableFixed.getBoundingClientRect()
+        // 获取悬浮层 Table 元素距离顶部距离
+        const tableFixedWrapperRect = this.tableFixedWrapper.getBoundingClientRect()
+        // 获得悬浮层 Table 头部到悬浮层顶部之间的距离，也就是头部顶上加自定义插件的距离
+        this.fixedHeaderPaddingTop = tableFixedWrapperRect.y - tableFixedRect.y
+      } else {
+        // 有定义悬浮高度
+        this.fixedHeaderPaddingTop = this.fixedHeadPaddingTop
+      }
+      // 刷新悬浮层内部大小
+      this.reloadFixedSize()
+    },
     // 刷新悬浮层内容大小
     reloadFixedSize () {
       // 获得头部高度
       this.tableTheadHeight = this.tableThead.clientHeight
       // 是否存在悬浮行
-      this.fixedRows.forEach(item => {
-        this.tableTheadHeight += item.clientHeight
-      })
+      this.fixedRows.forEach(item => { this.tableTheadHeight += item.clientHeight })
+      // 增加悬浮层 Table 到插件顶部之间的高度
+      this.tableTheadHeight += this.fixedHeaderPaddingTop
       // 增加偏移高度
-      this.tableTheadHeight += this.fixedHeaderOffsetBottom
+      this.tableTheadHeight += this.fixedHeaderOffsetHeight
       // 头部悬浮层高度统一
       this.tableFixed.style.height = `${this.tableTheadHeight}px`
       // 将当前自定义滚动条宽度与当前 Table 的 Body 元素保持一致
@@ -371,7 +415,7 @@ export default {
       // 最大Y值
       const maxY = offsetTop + pluginViewHeight - footerHeight
       // 更新悬浮层头部位置
-      this.tableFixed.style.top = `${Math.max(Math.min(-pluginViewRect.y + this.fixedHeaderTop, (maxY - offsetTop - this.tableTheadHeight)), 0)}px`
+      this.tableFixed.style.top = `${Math.max(Math.min(-pluginViewRect.y + this.fixedHeadTop, (maxY - offsetTop - this.tableTheadHeight)), 0)}px`
       // 自定义滚动条高度
       const srollBarHeight = this.tableSrollBarView.offsetHeight
       // 更新悬浮层尾部位置

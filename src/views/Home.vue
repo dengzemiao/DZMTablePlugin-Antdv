@@ -9,7 +9,8 @@
       <a-button @click="jumlCase('case6')">案例六：Table Plugin 包裹被多层 div 包裹的 Table</a-button>
       <a-button @click="jumlCase('case7')">案例七：Table 头部悬浮 附带 合计行 悬浮</a-button>
       <a-button @click="jumlCase('case8')">案例八：Table 头部悬浮设置 marginTop（当顶部有悬浮菜单栏时使用）</a-button>
-      <a-button @click="touchCase11">案例九：Table 在侧滑弹窗中效果</a-button>
+      <a-button @click="jumlCase('case9')">案例九：Table 悬浮层头上还有其他附带元素（比如选择项、工具栏）</a-button>
+      <a-button @click="touchCase11">案例十：Table 在侧滑弹窗中效果</a-button>
       <!-- 小提示 -->
       <div class="hint-view">
         <span class="hint-title">测试结果建议（一般情况下不需要用到，遇到时可以进行参考）：</span>

@@ -3,17 +3,23 @@
   <div class="content-view">
     <!-- TablePlugin -->
     <TablePlugin :fixedRowCount="2" @scroll="scrollChange">
-      <!-- 这里添加背景颜色，是因为指定悬浮行数之后，行的背景是透明的，不加背景颜色会出现穿透看到悬浮下面的行数据 -->
-      <a-table
-        style="background-color: #fff;"
-        :columns="columns"
-        :data-source="dataSource"
-        :row-key="record => record.id"
-        :pagination="pagination"
-        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-        :scroll="{ x: 1500 }"
-        @change="onChange"
-      ></a-table>
+      <!-- 需要有一层 div 进行包裹，保证插件内部第一层子元素同级只有一个，不能存在兄弟节点 -->
+      <div>
+        <!-- 工具栏什么的，但是由于 table 如果存在固定列的话，会由于 z-index 问题导致悬浮层会被遮住一部分，所以需要调整一下 table 的悬浮层 z-index 值 -->
+        <div class="tool-bar">工具栏</div>
+        <!-- 这里添加背景颜色，是因为指定悬浮行数之后，行的背景是透明的，不加背景颜色会出现穿透看到悬浮下面的行数据 -->
+        <a-table
+          class="table-z-index"
+          style="background-color: #fff;"
+          :columns="columns"
+          :data-source="dataSource"
+          :row-key="record => record.id"
+          :pagination="pagination"
+          :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+          :scroll="{ x: 1500 }"
+          @change="onChange"
+        ></a-table>
+      </div>
     </TablePlugin>
   </div>
 </template>
@@ -92,5 +98,18 @@ export default {
 <style scoped>
 .content-view {
   margin: 50px;
+}
+.tool-bar {
+  background-color: red;
+  height: 80px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+/* 强行修改一下 Table 内部固定列的 z-index 值 */
+.table-z-index >>> .ant-table-fixed-left {
+  z-index: 0;
 }
 </style>
