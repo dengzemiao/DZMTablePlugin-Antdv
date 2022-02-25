@@ -3,17 +3,20 @@
   <div class="content-view">
     <!-- TablePlugin -->
     <TablePlugin :fixedRowCount="2" @scroll="scrollChange">
-      <!-- 这里添加背景颜色，是因为指定悬浮行数之后，行的背景是透明的，不加背景颜色会出现穿透看到悬浮下面的行数据 -->
-      <a-table
-        style="background-color: #fff;"
-        :columns="columns"
-        :data-source="dataSource"
-        :row-key="record => record.id"
-        :pagination="pagination"
-        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-        :scroll="{ x: 1500 }"
-        @change="onChange"
-      ></a-table>
+      <div>
+        <!-- 这里添加背景颜色，是因为指定悬浮行数之后，行的背景是透明的，不加背景颜色会出现穿透看到悬浮下面的行数据 -->
+        <div style="background-color: red; height: 50px; width: 100%;"></div>
+        <a-table
+          style="background-color: #fff;"
+          :columns="columns"
+          :data-source="dataSource"
+          :row-key="record => record.id"
+          :pagination="pagination"
+          :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+          :scroll="{ x: 1500 }"
+          @change="onChange"
+        ></a-table>
+      </div>
     </TablePlugin>
   </div>
 </template>

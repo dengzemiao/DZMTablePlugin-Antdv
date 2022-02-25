@@ -170,8 +170,18 @@ export default {
       // 当前自定义滚动条
       this.tableSrollBarView = this.$refs['plugin-scroll-bar']
       this.tableSrollBar = this.$refs['scroll-bar']
+      // 获取当前插件内的所有子元素
+      const childrens = Array.from(this.pluginView.children)
+      console.log(childrens);
+      // 获得包含 Table 的子元素
+      const tables = []
+      childrens.forEach((children) => {
+        const els = Array.from(children.getElementsByClassName('ant-table-wrapper'))
+        if (els.length) { tables.push(children) }
+      })
+      // console.log(childrens);
       // 当前插件内所有 Table 元素
-      const tables = this.pluginView.getElementsByClassName('ant-table-wrapper')
+      // const tables = this.pluginView.getElementsByClassName('ant-table-wrapper')
       // 当前 Table
       this.table = tables[0]
       // 当前 Table 悬浮层
