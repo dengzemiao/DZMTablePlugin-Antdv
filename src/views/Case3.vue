@@ -3,17 +3,17 @@
   <div class="content-view">
     <div class="content-view-two">
       <!-- TablePlugin -->
-    <TablePlugin>
-      <a-table
-        class="my-table"
-        :columns="columns"
-        :data-source="dataSource"
-        :row-key="record => record.id"
-        :pagination="pagination"
-        :scroll="{ x: 1500 }"
-      >
-      </a-table>
-    </TablePlugin>
+      <TablePlugin>
+        <a-table
+          class="my-table"
+          :columns="columns"
+          :data-source="dataSource"
+          :row-key="record => record.id"
+          :pagination="pagination"
+          :scroll="{ x: 1500 }"
+        >
+        </a-table>
+      </TablePlugin>
     </div>
   </div>
 </template>
