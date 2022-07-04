@@ -6,7 +6,6 @@
       :durationHeader="0.2"
       :durationFooter="0.1"
     >
-    <!-- <TablePlugin> -->
       <a-table
         :columns="columns"
         :data-source="dataSource"
