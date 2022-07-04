@@ -4,7 +4,7 @@
     <!-- 头部悬浮菜单 -->
     <div class="fixed-menu"></div>
     <!-- TablePlugin -->
-    <TablePlugin :fixedHeaderTop="50" style="margin-top: 40px;">
+    <TablePlugin :fixedHeadTop="50" style="margin-top: 40px;">
       <a-table
         :columns="columns"
         :data-source="dataSource"
