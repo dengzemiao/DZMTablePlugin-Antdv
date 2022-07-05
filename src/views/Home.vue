@@ -5,7 +5,7 @@
       <a-button @click="jumlCase('case2')">案例二：Table 无固定悬浮列效果（带动画）</a-button>
       <a-button @click="jumlCase('case3')">案例三：Table 在多层级视图中效果</a-button>
       <a-button @click="jumlCase('case4')">案例四：Table 同一个页面存在多个效果</a-button>
-      <a-button @click="jumlCase('case5')">案例五：Table 自定义滚动监听</a-button>
+      <a-button @click="jumlCase('case5')">案例五：Table 自定义滚动监听（也就是当页面滚动元素非 Window ，而是其他满屏元素进行滚动）</a-button>
       <a-button @click="jumlCase('case6')">案例六：Table Plugin 包裹被多层 div 包裹的 Table</a-button>
       <a-button @click="jumlCase('case7')">案例七：Table 头部悬浮 附带 合计行 悬浮</a-button>
       <a-button @click="jumlCase('case8')">案例八：Table 头部悬浮设置 marginTop（当顶部有悬浮菜单栏时使用）</a-button>

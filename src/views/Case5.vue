@@ -73,11 +73,9 @@ export default {
 </script>
 
 <style scoped>
-.content-view {
-  margin: 50px;
-}
 .scroll-view {
-  height: 600px;
+  padding: 40px;
+  height: 100vh;
   overflow-y: auto;
 }
 </style>
